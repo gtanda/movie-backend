@@ -1,20 +1,9 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const api_key = process.env.API_KEY;
-const axios = require('axios');
+const app = require('./app')
+const http = require('http')
+const config = require('./utils/config')
 
-const app = express();
-app.use(cors());
+const server = http.createServer(app)
 
-const PORT = process.env.PORT;
-app.get('/api/movies', async (req, res) => {
-    const trendingMovies = await axios.get(
-        `https://api.themoviedb.org/3/trending/all/day?api_key=${process.env.API_KEY}`
-    );
-    res.json(trendingMovies.data);
-});
-
-app.listen(PORT, () => {
-    console.log(`Listening on PORT ${PORT}`);
+server.listen(config.PORT, () => {
+    console.log(`Listening on PORT ${config.PORT}`);
 });
