@@ -2,7 +2,7 @@ const usersRouter = require('express').Router()
 const User = require('../models/user')
 const bcrypt = require('bcrypt')
 
-usersRouter.post('/', async (req, res) => {
+usersRouter.post('/', async (req, res, next) => {
     const {username, email, password, confirmPassword} = req.body
     if (password !== confirmPassword) {
         return res.status(403).json({error: 'Passwords don\'t match'})
@@ -20,6 +20,7 @@ usersRouter.post('/', async (req, res) => {
 
     const savedUser = await user.save()
     res.status(201).json(savedUser)
+    next()
 })
 
 
