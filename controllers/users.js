@@ -13,8 +13,7 @@ usersRouter.post('/', async (req, res, next) => {
         return res.status(400).json({error: 'Username is taken'})
     }
 
-    const saltRounds = 10
-    const hashedPassword = await bcrypt.hash(password, saltRounds)
+    const hashedPassword = await bcrypt.hash(password, 10)
 
     const user = new User({username, email, hashedPassword})
 

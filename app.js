@@ -1,30 +1,17 @@
 const config = require('./utils/config')
 const express = require('express')
-const ExpressPinoLogger = require('express-pino-logger')
+const mongoose = require('mongoose')
+const cors = require('cors')
+const session = require('express-session')
+const MongoDBSession = require('connect-mongodb-session')(session)
 const app = express()
+const pino = require('./utils/logger')
 require('express-async-errors')
 
-const cors = require('cors')
-
-const pinoLogger = ExpressPinoLogger({
-    transport: {
-        target: 'pino-pretty',
-        options: {
-            colorize: true
-        }
-    },
-    serializers: {
-        req: (req) => ({
-            method: req.method,
-            url: req.url,
-            user: req.raw.user,
-        }),
-    },
-})
-app.use(pinoLogger)
-const usersRouter = require('./controllers/users')
-const moviesRouter = require('./controllers/movies')
-const mongoose = require('mongoose')
+app.use(cors())
+app.use(express.json())
+app.use(express.urlencoded({extended: false}))
+app.use(pino)
 
 mongoose.connect(config.MONGODB_URI).then(() => {
     console.log('Connected to MongoDB')
@@ -32,11 +19,22 @@ mongoose.connect(config.MONGODB_URI).then(() => {
     console.log('error connecting to MongoDB:', err.message)
 })
 
-app.use(cors())
-app.use(express.json())
+const store = new MongoDBSession({
+    uri: config.MONGODB_URI,
+    collection: 'mySessions'
+})
+
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie:  {maxAge: 86400000},
+    store
+}))
 
 
-app.use('/api/movies', moviesRouter)
-app.use('/api/users', usersRouter)
+app.use('/api/users', require('./controllers/users'))
+app.use('/api/login', require('./controllers/login'))
+app.use('/api/movies', require('./controllers/movies'))
 
 module.exports = app;
