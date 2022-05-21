@@ -2,7 +2,7 @@ const loginRouter = require('express').Router()
 const User = require('../models/user')
 const bcrypt = require('bcrypt')
 
-loginRouter.post('/', async (req, res, next) => {
+loginRouter.post('/', async (req, res) => {
     const {username, password} = req.body;
 
     const user = await User.findOne({username})
@@ -13,8 +13,8 @@ loginRouter.post('/', async (req, res, next) => {
     }
 
 
+    req.session.isAuth = true
     res.status(200).send(req.session)
-    next()
 })
 
 

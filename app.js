@@ -6,6 +6,7 @@ const session = require('express-session')
 const MongoDBSession = require('connect-mongodb-session')(session)
 const app = express()
 const pino = require('./utils/logger')
+const middleware = require('./utils/middleware')
 require('express-async-errors')
 
 app.use(cors())
@@ -35,6 +36,8 @@ app.use(session({
 
 app.use('/api/users', require('./controllers/users'))
 app.use('/api/login', require('./controllers/login'))
+app.use('/api/profile', require('./controllers/profile'))
 app.use('/api/movies', require('./controllers/movies'))
+app.use(middleware.unknownEndpoint)
 
 module.exports = app;

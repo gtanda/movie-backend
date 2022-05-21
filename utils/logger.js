@@ -10,13 +10,7 @@ module.exports = ExpressPinoLogger({
     serializers: {
         req: (req) => ({
             method: req.method,
-            url: req.url,
-            user: req.raw.user,
+            url: req.url
         }),
-        res: (res) => ({
-            method: res.method,
-            url: res.url,
-            user: res.raw.user
-        })
     },
 })

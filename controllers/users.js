@@ -19,7 +19,6 @@ usersRouter.post('/', async (req, res, next) => {
 
     const savedUser = await user.save()
     res.status(201).json(savedUser)
-    next()
 })
 
 
