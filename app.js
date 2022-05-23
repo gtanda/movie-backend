@@ -7,6 +7,7 @@ const connectStore = require('connect-mongo')
 const app = express()
 const pino = require('./utils/logger')
 const middleware = require('./utils/middleware')
+const cookieParser = require('cookie-parser')
 require('express-async-errors')
 
 
@@ -22,33 +23,28 @@ app.use(cors({
     credentials: true,
     origin: 'http://localhost:3000'
 }));
-app.disable('x-powered-by')
-
-
-app.use(express.json())
+app.use(cookieParser())
 app.use(express.urlencoded({extended: true}))
+
+
+app.disable('x-powered-by')
+app.use(express.json())
 app.use(pino)
 
+
 app.use(session({
-    name: process.env.SESS_NAME,
+    key: process.env.SESS_NAME,
     secret: process.env.SESSION_SECRET,
     saveUninitialized: false,
     resave: false,
-    store: new MongoStore({
-        mongooseConnection: mongoose.connection,
-        collection: 'session',
-        ttl: parseInt(process.env.SESS_LIFETIME)
-    }),
     cookie: {
-        samesite: true,
-        secure: process.env.NODE_ENV === 'production',
-        maxAge: parseInt(process.env.SESS_LIFETIME)
+        expires: 1000 * 60 * 60 * 24
     }
 }))
 
+app.use('/api/profile', require('./controllers/profile'));
 app.use('/api/users', require('./controllers/users'));
 app.use('/api/session', require('./controllers/session'));
-app.use('/api/profile', require('./controllers/profile'));
 app.use('/api/movies', require('./controllers/movies'));
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);

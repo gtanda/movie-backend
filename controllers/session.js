@@ -33,7 +33,11 @@ sessionRouter.delete('/', async (req, res) => {
 
 
 sessionRouter.get("/", async (req, res) => {
-    res.status(200).send(req.session.user)
+    if (req.session.user) {
+        return res.status(200).send({loggedIn: true, user: req.session.user})
+    } else {
+        res.send({loggedIn: false})
+    }
 })
 
 module.exports = sessionRouter;
