@@ -1,6 +1,7 @@
 const usersRouter = require('express').Router()
 const User = require('../models/user')
 const bcrypt = require('bcrypt')
+const {sessionizeUser} = require("../utils/helper");
 
 usersRouter.post('/', async (req, res, next) => {
     const {username, email, password, confirmPassword} = req.body
@@ -18,8 +19,12 @@ usersRouter.post('/', async (req, res, next) => {
     const user = new User({username, email, hashedPassword})
 
     const savedUser = await user.save()
-    res.status(201).json(savedUser)
+    const sessionUser = sessionizeUser(savedUser)
+
+    req.session.user = sessionUser
+    res.status(201).json(sessionUser)
 })
+
 
 
 

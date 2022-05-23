@@ -1,0 +1,11 @@
+### Send POST request with json body
+POST http://localhost:3001/api/users
+Content-Type: application/json
+
+{
+  "username": "gtanda2",
+  "email": "sample@test.ca",
+  "password": "abc",
+  "confirmPassword": "abc"
+
+}

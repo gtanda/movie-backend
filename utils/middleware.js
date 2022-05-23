@@ -1,11 +1,15 @@
-const isAuth = async (req, res, next) => {
-    if (req.session.isAuth) {
-        next()
+const errorHandler = (error, req, res, next) => {
+    console.error(error.message)
+
+    if (error.name === 'CastError') {
+        return res.status(400).send({error: 'wrongly formatted id'})
     }
-    res.redirect('/login')
+
+    next(error)
 }
+
 const unknownEndpoint = (request, response) => {
     response.status(404).send({ error: 'unknown endpoint' });
 };
 
-module.exports = {isAuth, unknownEndpoint}
+module.exports = {unknownEndpoint, errorHandler}
