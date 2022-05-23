@@ -22,10 +22,10 @@ sessionRouter.delete('/', async (req, res) => {
     const user = req.session.user
 
     if (user) {
-        const destroyUser = await req.session.user.destroy()
+        const destroyUser = await req.session.destroy()
         console.log(destroyUser)
 
-        res.clearCookie(process.env.SESS_NAME)
+        await res.clearCookie(process.env.SESS_NAME)
         return res.status(200).send(user)
     }
     res.status(422).send({error: 'could not destroy session'})
