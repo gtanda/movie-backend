@@ -46,6 +46,7 @@ app.use('/api/profile', require('./controllers/profile'));
 app.use('/api/users', require('./controllers/users'));
 app.use('/api/session', require('./controllers/session'));
 app.use('/api/movies', require('./controllers/movies'));
+app.use('/api/trailers', require('./controllers/trailers'));
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
 
