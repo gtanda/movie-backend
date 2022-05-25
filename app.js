@@ -47,6 +47,7 @@ app.use('/api/users', require('./controllers/users'));
 app.use('/api/session', require('./controllers/session'));
 app.use('/api/movies', require('./controllers/movies'));
 app.use('/api/trailers', require('./controllers/trailers'));
+app.use('/api/tmdb', require('./controllers/tmdb'));
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
 

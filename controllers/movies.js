@@ -3,11 +3,6 @@ const axios = require('axios')
 const VideoData = require('../models/video');
 const User = require('../models/user');
 
-moviesRouter.get('/', async (req, res) => {
-    const searchType = req.url.split('=')[1]
-    const trending = await axios.get(`https://api.themoviedb.org/3/trending/${searchType}/day?api_key=${process.env.TMDB_API}`);
-    res.status(200).json(trending.data);
-})
 
 moviesRouter.post('/', async (req, res) => {
     const mediaType = req.body.data.media_type;
@@ -45,5 +40,7 @@ moviesRouter.post('/', async (req, res) => {
 
     return res.status(400).json({error: 'Could not saved to watchlist'})
 })
+
+
 
 module.exports = moviesRouter;
