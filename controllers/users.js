@@ -3,6 +3,13 @@ const User = require('../models/user')
 const bcrypt = require('bcrypt')
 const {sessionizeUser} = require("../utils/helper");
 
+usersRouter.get('/', async (req, res) => {
+    const username = req.url.split('=')[1]
+    const user = await User.findOne({username}).populate('watchList')
+
+    console.log(user)
+})
+
 usersRouter.post('/', async (req, res, next) => {
     const {username, email, password, confirmPassword} = req.body
     if (password !== confirmPassword) {

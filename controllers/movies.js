@@ -1,17 +1,17 @@
 const moviesRouter = require('express').Router()
-const axios = require('axios')
 const VideoData = require('../models/video');
 const User = require('../models/user');
-
 
 moviesRouter.post('/', async (req, res) => {
     const mediaType = req.body.data.media_type;
     const user = req.body.user;
     const userInDB = await User.findById(user.id)
-    console.log('userini;db', userInDB)
+
+    if (!userInDB) {
+        return res.status(400).json({error: 'Login to add movies to watchlist'})
+    }
 
     if (mediaType === 'movie') {
-        console.log('got here')
         const {title, id, poster_path} = req.body.data;
         const movieToSave = new VideoData({
             title,
