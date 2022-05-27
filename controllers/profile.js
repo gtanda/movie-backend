@@ -6,6 +6,7 @@ profileRouter.get('/', async (req, res) => {
     if (!req.session.user) {
         return res.status(401).json({error: 'Not authenticated'})
     }
+
     const id = req.session.user.userId
     const user = await User.findById(id)
     if (!user) {

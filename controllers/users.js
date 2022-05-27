@@ -4,10 +4,14 @@ const bcrypt = require('bcrypt')
 const {sessionizeUser} = require("../utils/helper");
 
 usersRouter.get('/', async (req, res) => {
-    const username = req.url.split('=')[1]
-    const user = await User.findOne({username}).populate('watchList')
+    if (!req.session.user) {
+        return res.status(401).json({error: 'Not authenticated'})
+    }
 
-    console.log(user)
+    const username = req.url.split('=')[1]
+    const userWatchList = await User.findOne({username}).populate('watchList')
+
+    res.status(200).json(userWatchList);
 })
 
 usersRouter.post('/', async (req, res, next) => {
