@@ -33,7 +33,6 @@ sessionRouter.delete('/', async (req, res) => {
 
 sessionRouter.get("/", async (req, res) => {
     if (req.session.user) {
-        console.log('hitting route')
         return res.status(200).send({loggedIn: true, user: req.session.user})
     } else {
         res.send({loggedIn: false})
