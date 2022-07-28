@@ -11,7 +11,7 @@ usersRouter.get('/', async (req, res) => {
     const username = req.url.split('=')[1]
     const userWatchList = await User.findOne({username}).populate('watchList')
 
-    res.status(200).json(userWatchList);
+    return res.status(200).json(userWatchList);
 })
 
 usersRouter.post('/', async (req, res, next) => {
@@ -33,11 +33,8 @@ usersRouter.post('/', async (req, res, next) => {
     const sessionUser = sessionizeUser(savedUser)
 
     req.session.user = sessionUser
-    res.status(201).json(sessionUser)
+    return res.status(201).json(sessionUser)
 })
-
-
-
 
 
 module.exports = usersRouter;

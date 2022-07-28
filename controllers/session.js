@@ -15,7 +15,7 @@ sessionRouter.post('/', async (req, res) => {
 
     const sessionUser = sessionizeUser(user)
     req.session.user = sessionUser;
-    res.status(200).send(sessionUser);
+    return res.status(200).send(sessionUser);
 })
 
 sessionRouter.delete('/', async (req, res) => {
@@ -28,14 +28,14 @@ sessionRouter.delete('/', async (req, res) => {
         await res.clearCookie(process.env.SESS_NAME)
         return res.status(200).send(user)
     }
-    res.status(422).send({error: 'could not destroy session'})
+    return es.status(422).send({error: 'could not destroy session'})
 })
 
 sessionRouter.get("/", async (req, res) => {
     if (req.session.user) {
         return res.status(200).send({loggedIn: true, user: req.session.user})
     } else {
-        res.send({loggedIn: false})
+        return res.send({loggedIn: false})
     }
 })
 

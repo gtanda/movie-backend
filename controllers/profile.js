@@ -13,7 +13,7 @@ profileRouter.get('/', async (req, res) => {
         return res.status(401).json({error: 'User does not exist'})
     }
 
-    res.status(200).send({username: user.username, email: user.email})
+    return res.status(200).send({username: user.username, email: user.email})
 })
 
 profileRouter.patch('/updateUsername', async (req, res) => {
