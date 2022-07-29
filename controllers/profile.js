@@ -79,13 +79,18 @@ profileRouter.patch('/updateEmail', async (req, res) => {
 
 profileRouter.patch('/updatePassword', async (req, res) => {
   if (!req.session.user) {
-    return res.status(401).json({ message: 'Not authenticated' })
+    return res
+      .status(401)
+      .json({ messageStatus: 'error', message: 'Not authenticated' })
   }
 
   const { email, newPassword } = req.body
 
   const userExists = await User.findOne({ email })
-  console.log(userExists)
+  if (!userExists) {
+    return res.json({ messageStatus: 'error', message: 'User does not exist' })
+  }
+
   if (userExists) {
     const hashedPassword = await bcrypt.hash(newPassword, 10)
     const updatedUser = await User.findOneAndUpdate(
@@ -93,10 +98,16 @@ profileRouter.patch('/updatePassword', async (req, res) => {
       { hashedPassword },
       { new: true }
     )
-    return res.status(204)
+    return res.json({
+      user: updatedUser,
+      messageStatus: 'success',
+      message: 'Password updated successfully'
+    })
   }
 
-  return res.status(400).json({ message: 'Could not update user' })
+  return res
+    .status(400)
+    .json({ messageStatus: 'error', message: 'Could not update password' })
 })
 
 module.exports = profileRouter
