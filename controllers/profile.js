@@ -49,21 +49,32 @@ profileRouter.patch('/updateUsername', async (req, res) => {
 
 profileRouter.patch('/updateEmail', async (req, res) => {
   if (!req.session.user) {
-    return res.status(401).json({ message: 'Not authenticated' })
+    return res
+      .status(401)
+      .json({ messageStatus: 'error', message: 'Not authenticated' })
   }
 
   const { email, newEmail } = req.body
   const emailIsTaken = await User.findOne({ email: newEmail })
+  if (emailIsTaken) {
+    return res.json({ messageStatus: 'error', message: 'Email is taken' })
+  }
   if (!emailIsTaken) {
     const updatedUser = await User.findOneAndUpdate(
       email,
       { email: newEmail },
       { new: true }
     )
-    return res.status(204)
+    return res.json({
+      user: updatedUser,
+      messageStatus: 'success',
+      message: 'Email updated successfully'
+    })
   }
 
-  return res.status(400).json({ message: 'Could not update user' })
+  return res
+    .status(400)
+    .json({ messageStatus: 'error', message: 'Could not update user' })
 })
 
 profileRouter.patch('/updatePassword', async (req, res) => {
