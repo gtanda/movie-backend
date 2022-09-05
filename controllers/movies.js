@@ -1,44 +1,36 @@
-const moviesRouter = require('express').Router()
-const VideoData = require('../models/video')
-const User = require('../models/user')
+const moviesRouter = require('express').Router();
+const User = require('../models/user');
 
 moviesRouter.post('/', async (req, res) => {
-  const mediaType = req.body.data.media_type
-  const user = req.body.user
-  const userInDB = await User.findById(user.id)
+    const user = req.body.user;
+    const userInDB = await User.findById(user.id);
 
-  if (!userInDB) {
-    return res.status(400).json({ error: 'Login to add movies to watchlist' })
-  }
+    if (!userInDB) {
+        return res.status(400).json({ error: 'Login to add movies to watchlist' });
+    }
 
-  if (mediaType === 'movie') {
-    const { title, id, posterPath } = req.body.data
-    const movieToSave = new VideoData({
-      title,
-      videoID: id,
-      posterPath
-    })
+    const video = req.body.data;
+    userInDB.watchList = userInDB.watchList.concat(video);
+    const savedData = await userInDB.save();
 
-    const savedMovie = await movieToSave.save()
-    userInDB.watchList = userInDB.watchList.concat(savedMovie)
-    await userInDB.save()
-    return res.status(200).json(savedMovie)
-  } else if (mediaType === 'tv') {
-    const { name, id, posterPath } = req.body.data
-    const showToSave = new VideoData({
-      title: name,
-      videoID: id,
-      posterPath
-    })
-    const userInDB = await User.findById(user.id)
+    if (savedData) {
+        return res.status(201).json(savedData);
+    }
+    return res.status(400).json({ error: 'Could not saved to watchlist' });
+});
 
-    const savedShow = await showToSave.save()
-    userInDB.watchList = userInDB.watchList.concat(savedShow)
-    await userInDB.save()
-    return res.status(200).json(savedShow)
-  }
+moviesRouter.put('/', async (req, res) => {
+    const user = req.body.user;
+    const dataToRemove = req.body.dataToRemove;
+    const userInDB = await User.findById(user.id);
 
-  return res.status(400).json({ error: 'Could not saved to watchlist' })
-})
+    if (!userInDB) {
+        return res.status(400).json({ error: 'Login to remove movies from watchlist' });
+    }
 
-module.exports = moviesRouter
+    userInDB.watchList = userInDB.watchList.filter(data => data.id !== dataToRemove.id);
+    const savedData = await userInDB.save();
+    return res.status(201).json(savedData);
+});
+
+module.exports = moviesRouter;
