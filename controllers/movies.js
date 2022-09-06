@@ -6,7 +6,7 @@ moviesRouter.post('/', async (req, res) => {
     const userInDB = await User.findById(userId);
 
     if (!userInDB) {
-        return res.status(400).json({error: 'Login to add movies to watchlist'});
+        return res.status(400).json({ error: 'Login to add movies to watchlist' });
     }
 
     const video = req.body.data;
@@ -16,7 +16,7 @@ moviesRouter.post('/', async (req, res) => {
     if (savedData) {
         return res.status(201).json(savedData);
     }
-    return res.status(400).json({error: 'Could not saved to watchlist'});
+    return res.status(400).json({ error: 'Could not saved to watchlist' });
 });
 
 moviesRouter.put('/', async (req, res) => {
@@ -25,7 +25,7 @@ moviesRouter.put('/', async (req, res) => {
     const userInDB = await User.findById(userId);
 
     if (!userInDB) {
-        return res.status(400).json({message: 'Login to remove movies from watchlist', messageStatus: 'error'});
+        return res.status(400).json({ message: 'Login to remove movies from watchlist', messageStatus: 'error' });
     }
 
     userInDB.watchList = userInDB.watchList.filter(data => data.id !== dataToRemove.id);
@@ -43,7 +43,7 @@ moviesRouter.get('/', async (req, res) => {
     console.log(userInDB);
 
     if (!userInDB) {
-        return res.status(400).json({error: 'Login to view watchlist'});
+        return res.status(400).json({ error: 'Login to view watchlist' });
     }
 
     return res.status(200).json(userInDB.watchList);

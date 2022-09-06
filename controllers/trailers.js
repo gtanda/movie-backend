@@ -19,7 +19,7 @@ trailerRouter.get('/', async (req, res) => {
         }
     }
 
-    return res.status(400).json({error: 'could not find trailer'});
+    return res.status(400).json({ error: 'could not find trailer' });
 });
 
 module.exports = trailerRouter;
