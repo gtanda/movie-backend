@@ -27,7 +27,7 @@ profileRouter.patch('/updateUsername', async (req, res) => {
 
     const userNameIsTaken = await User.findOne({ username: newUsername });
     if (userNameIsTaken) {
-        return res.json({ messageStatus: 'error', message: 'Username is taken' });
+        return res.status(400).json({ messageStatus: 'error', message: 'Username is taken' });
     }
     if (!userNameIsTaken) {
         const updatedUser = await User.findOneAndUpdate(
@@ -36,7 +36,7 @@ profileRouter.patch('/updateUsername', async (req, res) => {
             { new: true }
         );
         if (updatedUser.username === newUsername) {
-            return res.json({
+            return res.status(201).json({
                 user: updatedUser,
                 messageStatus: 'success',
                 message: 'Username updated successfully'
@@ -44,7 +44,7 @@ profileRouter.patch('/updateUsername', async (req, res) => {
         }
     }
 
-    return res.send({ messageStatus: 'error', message: 'Could not update user' });
+    return res.status(400).send({ messageStatus: 'error', message: 'Could not update user' });
 });
 
 profileRouter.patch('/updateEmail', async (req, res) => {
