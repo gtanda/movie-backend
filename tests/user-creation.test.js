@@ -50,6 +50,16 @@ describe('user creation', () => {
             .send(user)
             .expect(400);
     });
+    test('login with a valid user info works', async () => {
+        const user = {
+            username: 'user2',
+            password: 'test'
+        };
+
+        const loggedInUser = await api.post('/api/session').send(user).expect(200);
+        expect(loggedInUser.body.username).toBe('user2');
+        expect(loggedInUser.body.email).toBe('tests@email.com');
+    });
 });
 
 afterAll(() => mongoose.connection.close());
