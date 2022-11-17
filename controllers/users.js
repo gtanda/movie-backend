@@ -10,7 +10,6 @@ usersRouter.get('/', async (req, res) => {
 
     const username = req.session.user.username;
     const userWatchList = await User.findOne({ username }).populate('watchList');
-    console.log('userWatchList', userWatchList);
     if (userWatchList.watchList) {
         return res.status(200).json(userWatchList.watchList);
     }
